@@ -1,7 +1,7 @@
 <ul class="sidebar-nav">
   <li><a href="{% url 'kitchen:index' %}">Home</a></li>
   <li><a href="{% url 'kitchen:dish-type-list' %}">All dish types</a></li>
-  <li><a href="#">All ingredients</a></li>
-  <li><a href="#">All cooks</a></li>
-  <li><a href="#">All dishes</a></li>
+  <li><a href="{% url 'kitchen:ingredient-list' %}">All ingredients</a></li>
+  <li><a href="{% url 'kitchen:cook-list' %}">All cooks</a></li>
+  <li><a href="{% url 'kitchen:dish-list' %}">All dishes</a></li>
 </ul>
