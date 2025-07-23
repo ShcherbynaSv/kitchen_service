@@ -1,5 +1,6 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
+from django.views import generic
 
 from kitchen.models import DishType, Ingredient, Cook, Dish
 
@@ -12,3 +13,9 @@ def index(request: HttpRequest) -> HttpResponse:
         "dishes": Dish.objects.all().count(),
     }
     return render(request, "kitchen/index.html", context=context)
+
+
+class DishTypeListView(generic.ListView):
+    model = DishType
+    template_name = "kitchen/dish_type_list.html"
+    context_object_name = "dish_type_list"
