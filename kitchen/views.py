@@ -32,3 +32,10 @@ class CookListView(generic.ListView):
 class DishListView(generic.ListView):
     model = Dish
     context_object_name = "dishes_list"
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        dish_type_id = self.request.GET.get("dish_type")
+        if dish_type_id:
+            queryset = queryset.filter(dish_type_id=dish_type_id)
+        return queryset
