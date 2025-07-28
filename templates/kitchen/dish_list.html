@@ -2,6 +2,12 @@
 
 {% block content %}
   <h1>Dishes</h1>
+
+  {% if selected_dish_type %}
+    <p>Filtered by dish type: <strong>{{ selected_dish_type.name }}</strong></p>
+    <p><a href="{% url 'kitchen:dish-list' %}">Clear filter</a></p>
+  {% endif %}
+
   {% if dishes_list %}
     <ul>
       {% for dish in dishes_list %}
