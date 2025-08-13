@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>{{ object.first_name }} {{ object.last_name }} ({{ object.years_of_experience }} year{{ object.years_of_experience|pluralize }} of experience)</h1>
+  <hr>
+  {% if object.email %}
+    <p><strong>E-mail: </strong> {{ object.email }}</p>
+  {% else %}
+    <p>There are no information about the cook's e-mail.</p>
+  {% endif %}
+{% endblock %}

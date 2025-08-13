@@ -5,7 +5,9 @@
   {% if cook_list %}
     <ul>
       {% for cook in cook_list %}
-        <li>{{ cook.first_name }} {{ cook.last_name }}</li>
+        <li>
+          <a href="{{ cook.get_absolute_url }}">{{ cook.first_name }} {{ cook.last_name }}</a>
+        </li>
       {% endfor %}
     </ul>
   {% else %}

@@ -11,7 +11,7 @@
   {% if dishes_list %}
     <ul>
       {% for dish in dishes_list %}
-        <li>{{ dish.name }}</li>
+        <li><a href="{{ dish.get_absolute_url }}">{{ dish.name }}</a></li>
       {% endfor %}
     </ul>
   {% else %}

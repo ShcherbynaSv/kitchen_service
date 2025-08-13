@@ -29,6 +29,10 @@ class CookListView(generic.ListView):
     model = Cook
 
 
+class CookDetailView(generic.DetailView):
+    model = Cook
+
+
 class DishListView(generic.ListView):
     model = Dish
     context_object_name = "dishes_list"
@@ -50,3 +54,7 @@ class DishListView(generic.ListView):
         context = super().get_context_data(**kwargs)
         context["selected_dish_type"] = self.dish_type
         return context
+
+
+class DishDetailView(generic.DetailView):
+    model = Dish
