@@ -58,3 +58,10 @@ class DishListView(generic.ListView):
 
 class DishDetailView(generic.DetailView):
     model = Dish
+
+    def get_queryset(self):
+        return (
+            super().get_queryset()
+            .select_related("dish_type")
+            .prefetch_related("cooks", "ingredients")
+        )
