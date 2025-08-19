@@ -19,14 +19,17 @@ class DishTypeListView(generic.ListView):
     model = DishType
     template_name = "kitchen/dish_type_list.html"
     context_object_name = "dish_type_list"
+    paginate_by = 10
 
 
 class IngredientListView(generic.ListView):
     model = Ingredient
+    paginate_by = 10
 
 
 class CookListView(generic.ListView):
     model = Cook
+    paginate_by = 10
 
 
 class CookDetailView(generic.DetailView):
@@ -36,6 +39,7 @@ class CookDetailView(generic.DetailView):
 class DishListView(generic.ListView):
     model = Dish
     context_object_name = "dishes_list"
+    paginate_by = 10
 
     def get_queryset(self):
         queryset = super().get_queryset()
