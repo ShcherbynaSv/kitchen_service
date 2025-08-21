@@ -1,4 +1,14 @@
 <ul class="sidebar-nav">
+  {% if user.is_authenticated %}
+    <li><strong>User: </strong>{{ user.username }}</li>
+    <form action="{% url 'logout' %}" method="post">
+      {% csrf_token %}
+      <button class="btn btn-primary" type="submit">Logout</button>
+    </form>
+  {% else %}
+    <li><a href="{% url 'login' %}">Login</a></li>
+  {% endif %}
+  <br>
   <li><a href="{% url 'kitchen:index' %}">Home</a></li>
   <li><a href="{% url 'kitchen:dish-type-list' %}">All dish types</a></li>
   <li><a href="{% url 'kitchen:ingredient-list' %}">All ingredients</a></li>
