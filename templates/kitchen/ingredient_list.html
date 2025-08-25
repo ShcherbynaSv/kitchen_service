@@ -1,13 +1,30 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>Ingredients</h1>
+  <h1>Ingredients<a style="float: right;" class="btn btn-primary" href="{% url 'kitchen:ingredient-create' %}"><b>+</b></a></h1>
   {% if ingredient_list %}
-    <ul>
+    <table class="table">
+      <tr>
+        <th>Ingredient name</th>
+        <th>UPDATE</th>
+        <th>DELETE</th>
+      </tr>
       {% for ingredient in ingredient_list %}
-        <li>{{ ingredient.name }}</li>
+        <tr>
+          <td>
+            <a href="{% url 'kitchen:dish-list' %}?ingredient={{ ingredient.id }}">
+              {{ ingredient.name }}
+            </a>
+          </td>
+          <td>
+            <a href="{% url 'kitchen:ingredient-update' ingredient.id %}">UPDATE</a>
+          </td>
+          <td>
+            <a href="{% url 'kitchen:ingredient-delete' ingredient.id %}">DELETE</a>
+          </td>
+        </tr>
       {% endfor %}
-    </ul>
+    </table>
   {% else %}
     <p>There are no ingredients</p>
   {% endif %}

@@ -8,4 +8,8 @@
   {% else %}
     <p>There are no information about the cook's e-mail.</p>
   {% endif %}
+  <a class="btn btn-secondary" href="{% url 'kitchen:cook-update' object.id %}">Update information</a>
+  <br>
+  <br>
+  <a class="btn btn-danger" href="{% url 'kitchen:cook-delete' object.id %}">Delete cook</a>
 {% endblock %}
