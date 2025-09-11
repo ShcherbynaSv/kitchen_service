@@ -1,17 +1,20 @@
-<ul class="sidebar-nav">
+<ul class="sidebar-nav list-group">
   {% if user.is_authenticated %}
-    <li><strong>User: </strong>{{ user.username }}</li>
-    <form action="{% url 'logout' %}" method="post">
-      {% csrf_token %}
-      <button class="btn btn-primary" type="submit">Logout</button>
-    </form>
+    <li class="list-group-item"><strong>User: </strong>{{ user.username }}</li>
+    <li class="list-group-item">
+      <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button class="btn btn-primary" type="submit">Logout</button>
+      </form>
+    </li>
+
   {% else %}
-    <li><a href="{% url 'login' %}">Login</a></li>
+    <li class="list-group-item"><a href="{% url 'login' %}">Login</a></li>
   {% endif %}
   <br>
-  <li><a href="{% url 'kitchen:index' %}">Home</a></li>
-  <li><a href="{% url 'kitchen:dish-type-list' %}">All dish types</a></li>
-  <li><a href="{% url 'kitchen:ingredient-list' %}">All ingredients</a></li>
-  <li><a href="{% url 'kitchen:cook-list' %}">All cooks</a></li>
-  <li><a href="{% url 'kitchen:dish-list' %}">All dishes</a></li>
+  <li class="list-group-item"><a href="{% url 'kitchen:index' %}">Home</a></li>
+  <li class="list-group-item"><a href="{% url 'kitchen:dish-type-list' %}">All dish types</a></li>
+  <li class="list-group-item"><a href="{% url 'kitchen:ingredient-list' %}">All ingredients</a></li>
+  <li class="list-group-item"><a href="{% url 'kitchen:cook-list' %}">All cooks</a></li>
+  <li class="list-group-item"><a href="{% url 'kitchen:dish-list' %}">All dishes</a></li>
 </ul>

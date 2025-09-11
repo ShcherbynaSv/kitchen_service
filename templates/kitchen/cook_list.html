@@ -1,7 +1,16 @@
 {% extends "base.html" %}
+{% load crispy_forms_filters %}
 
 {% block content %}
-  <h1>Cooks<a style="float: right;" class="btn btn-primary" href="{% url 'kitchen:cook-create' %}"><b>+</b></a></h1>
+  <h1>
+    Cooks
+    <a style="float: right;" class="btn btn-primary" href="{% url 'kitchen:cook-create' %}"><b>+</b></a>
+  </h1>
+  <form class="form-inline" method="get" action="">
+    {{ search_form|crispy }}
+    <input class="btn btn-secondary" type="submit" value="🔍">
+  </form>
+  <br>
   {% if cook_list %}
     <ul>
       {% for cook in cook_list %}

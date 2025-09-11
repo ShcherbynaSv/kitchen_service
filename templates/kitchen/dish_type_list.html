@@ -1,7 +1,16 @@
 {% extends "base.html" %}
+{% load crispy_forms_filters %}
 
 {% block content %}
-  <h1>Dish Types <a style="float: right;" class="btn btn-primary" href="{% url 'kitchen:dish-type-create' %}"><b>+</b></a></h1>
+  <h1>
+    Dish Types
+    <a style="float: right;" class="btn btn-primary" href="{% url 'kitchen:dish-type-create' %}"><b>+</b></a>
+  </h1>
+  <form class="form-inline" method="get" action="">
+    {{ search_form|crispy }}
+    <input class="btn btn-secondary" type="submit" value="🔍">
+  </form>
+  <br>
   {% if dish_type_list %}
     <table class="table">
       <tr>
@@ -12,7 +21,7 @@
       {% for dish_type in dish_type_list %}
         <tr>
           <td>
-            <a href="{{ dish.get_absolute_url }}">{{ dish_type.name }}</a>
+            <a href="{% url 'kitchen:dish-list' %}?dish_type={{ dish_type.id }}">{{ dish_type.name }}</a>
           </td>
           <td>
             <a href="{% url 'kitchen:dish-type-update' dish_type.id %}">UPDATE</a>

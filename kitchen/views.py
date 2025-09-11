@@ -4,7 +4,15 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
 
-from kitchen.forms import CookUpdateForm, CookCreationForm, DishForm
+from kitchen.forms import (
+    CookUpdateForm,
+    CookCreationForm,
+    DishForm,
+    DishTypeSearchForm,
+    IngredientSearchForm,
+    CookSearchForm,
+    DishSearchForm
+)
 from kitchen.models import DishType, Ingredient, Cook, Dish
 
 
@@ -23,6 +31,19 @@ class DishTypeListView(generic.ListView):
     template_name = "kitchen/dish_type_list.html"
     context_object_name = "dish_type_list"
     paginate_by = 10
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(DishTypeListView, self).get_context_data(**kwargs)
+        name = self.request.GET.get("name", "")
+        context["search_form"] = DishTypeSearchForm(initial={"name": name})
+        return context
+
+    def get_queryset(self):
+        queryset = DishType.objects.all()
+        form = DishTypeSearchForm(self.request.GET)
+        if form.is_valid():
+            return queryset.filter(name__icontains=form.cleaned_data["name"])
+        return queryset
 
 
 class DishTypeCreateView(LoginRequiredMixin, generic.CreateView):
@@ -49,6 +70,19 @@ class IngredientListView(generic.ListView):
     model = Ingredient
     paginate_by = 10
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(IngredientListView, self).get_context_data(**kwargs)
+        name = self.request.GET.get("name", "")
+        context["search_form"] = IngredientSearchForm(initial={"name": name})
+        return context
+
+    def get_queryset(self):
+        queryset = Ingredient.objects.all()
+        form = IngredientSearchForm(self.request.GET)
+        if form.is_valid():
+            return queryset.filter(name__icontains=form.cleaned_data["name"])
+        return queryset
+
 
 class IngredientCreateView(LoginRequiredMixin, generic.CreateView):
     model = Ingredient
@@ -73,6 +107,41 @@ class IngredientDeleteView(LoginRequiredMixin, generic.DeleteView):
 class CookListView(generic.ListView):
     model = Cook
     paginate_by = 10
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(CookListView, self).get_context_data(**kwargs)
+        full_name = self.request.GET.get("full_name")
+        search_form = CookSearchForm(
+            initial={"full_name": full_name}
+        )
+        context["search_form"] = search_form
+        return context
+
+    def get_queryset(self):
+        queryset = Cook.objects.all()
+        form = CookSearchForm(self.request.GET)
+        if form.is_valid():
+            query = form.cleaned_data.get("full_name")
+            if query:
+                parts = query.strip().split()
+                if len(parts) == 2:
+                    first, second = parts
+                    queryset = (
+                        queryset.filter(
+                            first_name__icontains=first,
+                            last_name__icontains=second
+                        )
+                        | queryset.filter(
+                            first_name__icontains=second,
+                            last_name__icontains=first
+                        )
+                    )
+                else:
+                    queryset = (
+                        queryset.filter(first_name__icontains=query)
+                        | queryset.filter(last_name__icontains=query)
+                    )
+        return queryset
 
 
 class CookDetailView(generic.DetailView):
@@ -111,31 +180,38 @@ class DishListView(generic.ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        self.dish_type = None
-        self.ingredient = None
+        queryset = (queryset.select_related("dish_type")
+                    .prefetch_related("ingredients"))
+        ingredient_id = self.request.GET.get("ingredients")
+        self.ingredient = Ingredient.objects.filter(id=ingredient_id).first() \
+            if ingredient_id else None
+        if self.ingredient:
+            queryset = queryset.filter(ingredients=self.ingredient)
 
         dish_type_id = self.request.GET.get("dish_type")
-        if dish_type_id:
-            queryset = queryset.filter(dish_type_id=dish_type_id)
-            try:
-                self.dish_type = DishType.objects.get(id=dish_type_id)
-            except DishType.DoesNotExist:
-                self.dish_type = None
+        self.dish_type = DishType.objects.filter(id=dish_type_id).first() \
+            if dish_type_id else None
+        if self.dish_type:
+            queryset = queryset.filter(dish_type=self.dish_type)
 
-        ingredient_id = self.request.GET.get("ingredient")
-        if ingredient_id:
-            queryset = queryset.filter(ingredients__id=ingredient_id)
-            try:
-                self.ingredient = Ingredient.objects.get(id=ingredient_id)
-            except Ingredient.DoesNotExist:
-                self.ingredient = None
+        self.search_form = DishSearchForm(
+            self.request.GET or None,
+            initial={"name": self.request.GET.get("name", "")}
+        )
+        if self.search_form.is_valid():
+            query = self.search_form.cleaned_data.get("name")
+            if query:
+                queryset = queryset.filter(name__icontains=query)
 
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["selected_dish_type"] = self.dish_type
-        context["selected_ingredient"] = self.ingredient
+        context.update({
+            "selected_dish_type": self.dish_type,
+            "selected_ingredient": self.ingredient,
+            "search_form": self.search_form,
+        })
         return context
 
 

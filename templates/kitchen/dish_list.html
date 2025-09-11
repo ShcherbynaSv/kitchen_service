@@ -1,17 +1,39 @@
 {% extends "base.html" %}
+{% load crispy_forms_filters %}
 
 {% block content %}
   <h1>Dishes<a style="float: right;" class="btn btn-primary" href="{% url 'kitchen:dish-create' %}"><b>+</b></a></h1>
 
   {% if selected_dish_type %}
     <p>Filtered by dish type: <strong>{{ selected_dish_type.name }}</strong></p>
-    <p><a href="{% url 'kitchen:dish-list' %}">Clear filter</a></p>
+    <p>
+      <a href="{% url 'kitchen:dish-list' %}?name={{ request.GET.name }}">
+        Clear filter
+      </a>
+    </p>
   {% endif %}
 
   {% if selected_ingredient %}
     <p>Filtered by ingredient: <strong>{{ selected_ingredient.name }}</strong></p>
-    <p><a href="{% url 'kitchen:dish-list' %}">Clear filter</a></p>
+    <p>
+      <a href="{% url 'kitchen:dish-list' %}?name={{ request.GET.name }}">
+        Clear filter
+      </a>
+    </p>
   {% endif %}
+
+  <form class="form-inline" method="get" action="">
+    {% if selected_ingredient %}
+      <input type="hidden" name="ingredients" value="{{ selected_ingredient.id }}">
+    {% endif %}
+    {% if selected_dish_type %}
+      <input type="hidden" name="dish_type" value="{{ selected_dish_type.id }}">
+    {% endif %}
+
+    {{ search_form|crispy }}
+    <input class="btn btn-secondary" type="submit" value="🔍">
+  </form>
+  <br>
 
   {% if dishes_list %}
     <ul>
