@@ -27,7 +27,7 @@ class ModelsTests(TestCase):
     def test_dish_type_str(self):
         self.assertEqual(str(self.dish_type), self.dish_type.name)
 
-    def test_dish_type_str(self):
+    def test_ingredient_str(self):
         self.assertEqual(str(self.ingredient), self.ingredient.name)
 
     def test_cook_with_years_of_experience(self):
