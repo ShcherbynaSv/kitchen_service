@@ -228,7 +228,6 @@ class PrivateDishTypeDeleteViewTests(TestCase):
         self.assertTrue(DishType.objects.filter(id=self.dish_type.id).exists())
 
     def test_delete_nonexistent_object_returns_404(self):
-        self.client.force_login(self.user)
         bad_url = reverse("kitchen:dish-type-delete", args=[999])
         response = self.client.get(bad_url)
         self.assertEqual(response.status_code, 404)
